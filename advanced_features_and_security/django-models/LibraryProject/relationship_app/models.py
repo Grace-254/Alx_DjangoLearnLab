@@ -2,6 +2,7 @@ from django.conf import settings
 from django.db import models
 
 
+
 class Author(models.Model):
     name = models.CharField(max_length=100)
 
@@ -15,9 +16,10 @@ class Book(models.Model):
         return self.title
 class Meta:
         permissions = (
-            ("can_add_book", "Can add book"),
-            ("can_change_book", "Can change book"),
-            ("can_delete_book", "Can delete book"),
+            ("can_view", "Can view book"),
+            ("can_create", "Can create book"),
+            ("can_edit", "Can edit book"),
+            ("can_delete", "Can delete book"),
         )
 
 
