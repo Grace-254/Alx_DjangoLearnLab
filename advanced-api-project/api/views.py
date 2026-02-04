@@ -5,7 +5,7 @@ from .models import Book
 from .serializers import BookSerializer
 
 
-class BookListCreateAPIView(generics.ListCreateAPIView):
+class BookListView(generics.ListCreateAPIView):
     """
     ListView + CreateView combined for the Book model.
 
@@ -26,9 +26,9 @@ class BookListCreateAPIView(generics.ListCreateAPIView):
     ]
     # Filter by model fields
     filterset_fields = ["title", "author", "publication_year"]
-    # Search in these fields (author is a FK, so use name)
+    # Search in these fields (author is a FK, so use author name)
     search_fields = ["title", "author__name"]
-    # Allow ordering by these fields; ?ordering=-title etc.
+    # Allow ordering by these fields
     ordering_fields = ["title", "publication_year"]
     # Default ordering if none is specified
     ordering = ["title"]
@@ -42,7 +42,7 @@ class BookListCreateAPIView(generics.ListCreateAPIView):
         serializer.save()
 
 
-class BookRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
+class BookDetailView(generics.RetrieveUpdateDestroyAPIView):
     """
     DetailView + UpdateView + DeleteView combined for the Book model.
 

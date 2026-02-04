@@ -1,18 +1,18 @@
 from django.urls import path
 
 from .views import (
-    BookListCreateAPIView,
-    BookRetrieveUpdateDestroyAPIView,
+    BookListView,
+    BookDetailView,
 )
 
 urlpatterns = [
     # GET /books/ (list), POST /books/ (create)
-    path("books/", BookListCreateAPIView.as_view(), name="book-list-create"),
+    path("books/", BookListView.as_view(), name="book-list"),
 
-    # GET /books/<pk>/ (detail), PUT/PATCH/DELETE (update/delete)
+    # GET /books/<pk>/, PUT/PATCH/DELETE /books/<pk>/
     path(
         "books/<int:pk>/",
-        BookRetrieveUpdateDestroyAPIView.as_view(),
+        BookDetailView.as_view(),
         name="book-detail",
     ),
 ]
