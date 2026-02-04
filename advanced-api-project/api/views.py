@@ -9,37 +9,37 @@ class BookListView(generics.ListCreateAPIView):
     """
     ListView + CreateView combined for the Book model.
 
-    Supports:
-    - Filtering by title, author, and publication_year via query params.
-    - Searching by title and author name.
-    - Ordering by title and publication_year.
+    This view exposes advanced query capabilities so API consumers can:
+    - Filter the book list by title, author, and publication_year using query parameters.
+    - Search across book titles and author names for text matches.
+    - Order the results by title or publication_year.
+
+    Example requests:
+    - /books/?title=Things%20Fall%20Apart
+    - /books/?author=1
+    - /books/?publication_year=1958
+    - /books/?search=Chinua
+    - /books/?ordering=title
+    - /books/?ordering=-publication_year
     """
     queryset = Book.objects.all()
     serializer_class = BookSerializer
     permission_classes = [permissions.IsAuthenticatedOrReadOnly]
 
-    # Enable filtering, search, and ordering for this view
+    # Filtering, searching, and ordering configuration
     filter_backends = [
         DjangoFilterBackend,
         filters.SearchFilter,
         filters.OrderingFilter,
     ]
-    # Filter by model fields
+    # Step 1: filter by title, author (FK id), and publication_year
     filterset_fields = ["title", "author", "publication_year"]
-    # Search in these fields (author is a FK, so use author name)
+    # Step 2: search by title and author name
     search_fields = ["title", "author__name"]
-    # Allow ordering by these fields
+    # Step 3: allow ordering by title and publication_year
     ordering_fields = ["title", "publication_year"]
-    # Default ordering if none is specified
+    # Default ordering
     ordering = ["title"]
-
-    def perform_create(self, serializer):
-        """
-        Customize how new Book instances are created.
-
-        This hook is called after serializer.is_valid().
-        """
-        serializer.save()
 
 
 class BookDetailView(generics.RetrieveUpdateDestroyAPIView):

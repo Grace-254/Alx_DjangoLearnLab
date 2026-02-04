@@ -1,15 +1,12 @@
 from django.urls import path
 
-from .views import (
-    BookListView,
-    BookDetailView,
-)
+from .views import BookListView, BookDetailView
 
 urlpatterns = [
-    # GET /books/ (list), POST /books/ (create)
+    # Step 4: BookListView with filtering/search/ordering at /books/
     path("books/", BookListView.as_view(), name="book-list"),
 
-    # GET /books/<pk>/, PUT/PATCH/DELETE /books/<pk>/
+    # Detail/Update/Delete at /books/<pk>/
     path(
         "books/<int:pk>/",
         BookDetailView.as_view(),
