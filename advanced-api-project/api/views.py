@@ -4,51 +4,78 @@ from .models import Book
 from .serializers import BookSerializer
 
 
-class BookListCreateAPIView(generics.ListCreateAPIView):
+class BookListView(generics.ListAPIView):
     """
-    Handles listing all Book instances and creating new books.
+    ListView: returns all Book instances.
 
-    GET  /books/ -> returns a list of all books.
-    POST /books/ -> creates a new book after validating data
-                    with BookSerializer, including the custom
-                    publication_year validation.
+    This view handles read-only access to the collection of books.
+    Unauthenticated users can read, but cannot modify any data.
     """
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-    # Allow read-only for unauthenticated users, write for authenticated users
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [permissions.AllowAny]
+
+
+class BookDetailView(generics.RetrieveAPIView):
+    """
+    DetailView: returns a single Book instance by primary key.
+
+    This view provides read-only access to one specific book.
+    Unauthenticated users can read, but cannot modify any data.
+    """
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
+    permission_classes = [permissions.AllowAny]
+
+
+class BookCreateView(generics.CreateAPIView):
+    """
+    CreateView: creates new Book instances.
+
+    Only authenticated users are allowed to create new books.
+    Incoming data is validated by BookSerializer, including
+    custom checks on publication_year.
+    """
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
+    permission_classes = [permissions.IsAuthenticated]
 
     def perform_create(self, serializer):
         """
-        Customize how new Book instances are created.
+        Hook called after serializer.is_valid() during creation.
 
-        This hook is called after serializer.is_valid(). You can
-        attach request.user here if the Book model had an owner
-        field. For now we simply save the serializer.
+        You could attach request.user here if the Book model had
+        an owner field. For now we simply save the serializer.
         """
         serializer.save()
 
 
-class BookRetrieveUpdateDestroyAPIView(generics.RetrieveUpdateDestroyAPIView):
+class BookUpdateView(generics.UpdateAPIView):
     """
-    Handles retrieve, update, and delete operations for a single Book.
+    UpdateView: updates existing Book instances.
 
-    GET    /books/<pk>/ -> returns details of a single book.
-    PUT    /books/<pk>/ -> fully updates a book instance.
-    PATCH  /books/<pk>/ -> partially updates a book instance.
-    DELETE /books/<pk>/ -> deletes the specified book.
+    Only authenticated users are allowed to modify books.
+    Both full updates (PUT) and partial updates (PATCH) are supported.
     """
     queryset = Book.objects.all()
     serializer_class = BookSerializer
-    # Same permission: read for everyone, write for authenticated users
-    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    permission_classes = [permissions.IsAuthenticated]
 
     def perform_update(self, serializer):
         """
-        Customize how existing Book instances are updated.
+        Hook called when a valid update request is processed.
 
-        Called when a PUT/PATCH request with valid data is made.
-        You can add extra logic here, such as logging or enforcing
-        additional business rules before saving.
+        You can add additional business rules here before saving.
         """
         serializer.save()
+
+
+class BookDeleteView(generics.DestroyAPIView):
+    """
+    DeleteView: deletes Book instances.
+
+    Only authenticated users are allowed to delete books.
+    """
+    queryset = Book.objects.all()
+    serializer_class = BookSerializer
+    permission_classes = [permissions.IsAuthenticated]

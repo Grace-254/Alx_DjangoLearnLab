@@ -1,24 +1,26 @@
 from django.urls import path
 
 from .views import (
-    BookListCreateAPIView,
-    BookRetrieveUpdateDestroyAPIView,
+    BookListView,
+    BookDetailView,
+    BookCreateView,
+    BookUpdateView,
+    BookDeleteView,
 )
 
 urlpatterns = [
-    # ListView + CreateView combined:
-    # GET  /books/  -> list all books
-    # POST /books/  -> create a new book (authenticated only)
-    path("books/", BookListCreateAPIView.as_view(), name="book-list"),
+    # ListView: GET /books/
+    path("books/", BookListView.as_view(), name="book-list"),
 
-    # DetailView + UpdateView + DeleteView combined:
-    # GET    /books/<pk>/ -> retrieve a specific book
-    # PUT    /books/<pk>/ -> update a book (authenticated only)
-    # PATCH  /books/<pk>/ -> partial update (authenticated only)
-    # DELETE /books/<pk>/ -> delete a book (authenticated only)
-    path(
-        "books/<int:pk>/",
-        BookRetrieveUpdateDestroyAPIView.as_view(),
-        name="book-detail",
-    ),
+    # CreateView: POST /books/
+    path("books/", BookCreateView.as_view(), name="book-create"),
+
+    # DetailView: GET /books/<pk>/
+    path("books/<int:pk>/", BookDetailView.as_view(), name="book-detail"),
+
+    # UpdateView: PUT/PATCH /books/<pk>/
+    path("books/<int:pk>/", BookUpdateView.as_view(), name="book-update"),
+
+    # DeleteView: DELETE /books/<pk>/
+    path("books/<int:pk>/", BookDeleteView.as_view(), name="book-delete"),
 ]
