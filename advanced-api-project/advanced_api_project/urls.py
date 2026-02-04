@@ -3,6 +3,6 @@ from django.urls import path, include
 
 urlpatterns = [
     path("admin/", admin.site.urls),
-    # Expose book API under /books/...
+    # Expose the Book endpoints under /books/ and /books/<pk>/
     path("", include("api.urls")),
 ]
