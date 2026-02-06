@@ -1,15 +1,14 @@
-from django.urls import path
+from django.urls import path, include
+from rest_framework.routers import DefaultRouter
+from .views import BookViewSet  # Assume you have this
 
-from .views import BookListView, BookDetailView
+router = DefaultRouter()
+router.register(r'books', BookViewSet, basename='books')  # Generates list/create, retrieve/update/delete/ paths
 
 urlpatterns = [
-    # Step 4: BookListView with filtering/search/ordering at /books/
-    path("books/", BookListView.as_view(), name="book-list"),
-
-    # Detail/Update/Delete at /books/<pk>/
-    path(
-        "books/<int:pk>/",
-        BookDetailView.as_view(),
-        name="book-detail",
-    ),
+    path('', include(router.urls)),
+    # Or explicit function views:
+    # path('books/create/', BookCreateView.as_view(), name='book-create'),
+    # path('books/update/<int:pk>/', BookUpdateView.as_view(), name='book-update'),
+    # path('books/delete/<int:pk>/', BookDestroyView.as_view(), name='book-delete'),
 ]
