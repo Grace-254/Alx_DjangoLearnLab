@@ -1,3 +1,5 @@
+python manage.py shell
+
 from bookshelf.models import Book
 
 book = Book.objects.create(
